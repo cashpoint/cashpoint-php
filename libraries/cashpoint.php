@@ -76,13 +76,17 @@ class Cashpoint
     
     /**
      * Magic methods! All of the other methods have an HTTP method and
-     * a URL, and return their response directly. Simple.
+     * a URL, and return their response directly. The Cashpoint_Response
+     * object handles the response parsing & error throwing, so it's simple.
      */
     public function __call($method, $params)
     {
         if (isset($this->methods[$method]))
         {
-            return $this->_make_request($this->methods[$method][0], $this->methods[$method][1], $params, TRUE);
+            $request = $this->methods[$method][0] . ' ' . $this->methods[$method][1];
+            $response = $this->_make_request($this->methods[$method][0], $this->methods[$method][1], $params, TRUE);
+            
+            return new Cashpoint_Response($response, $request);
         }
         
         return FALSE;
@@ -112,22 +116,22 @@ class Cashpoint
         }
         
         if (is_array($params))
-		{
-			curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
-		}
-		
-		curl_setopt($curl, CURLOPT_URL, $url);
-		
-		$response = curl_exec($curl);
-		
-		if ($response === FALSE)
-		{
+        {
+        	curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
+        }
+
+        curl_setopt($curl, CURLOPT_URL, $url);
+
+        $response = curl_exec($curl);
+
+        if ($response === FALSE)
+        {
             throw new Exception(curl_error($curl));
-		}
-		
-		curl_close($curl);
-		
-		return json_decode($response);
+        }
+
+        curl_close($curl);
+
+        return json_decode($response);
     }
     
     /**
