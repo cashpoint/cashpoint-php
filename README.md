@@ -9,32 +9,33 @@ $cashpoint = new Cashpoint();
 
 $cashpoint->authenticate('api_key', 'api_secret');
 
-$response = $cashpoint->sale(array(
+$response = $cashpoint->sale(new Cashpoint_Transaction(array(
     'first_name' => 'Jamie',
     'last_name' => 'Rumbelow',
     'amount' => 10000,
     'currency' => 'GBP',
-    'credit_card' => array(
-        'type' => 'visa',
-        'number' => 0000000000000000,
+    'credit_card' => new Cashpoint_Credit_Card(array(
+        'type'   => 'visa',
+        'number' => 4899035848652006,
         'expiry' => '01/12',
-        'cvv' => 123
-    ),
-    'address' => array(
+        'cvv'    => 123
+    )),
+    'address' => new Cashpoint_Address(array(
         'street' => '1 Test Lane',
         'city' => 'Testtown',
         'region' => 'Testshire',
         'country' => 'GB',
         'postal_code' => 'TE1 1ST'
-    )
+    ))
 ));
 
-if ($response['success'])
+try
 {
-    echo "Successfully processed payment! (Transaction: " . $response['transaction'] . ")";
+    $response = $cashpoint->sale($transaction);
+    echo "Successfully processed payment! (Transaction: " . $response->transaction() . ")";
 }
-else
+catch (Cashpoint_Exception $e)
 {
-    echo "There was a problem! " . $response['error'];
+    echo "There was a problem! " . $e->getMessage();
 }
 ```

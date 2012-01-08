@@ -11,35 +11,46 @@
  * @license MIT
  */
 
+// Create the Cashpoint object
 $cashpoint = new Cashpoint();
 
+// Authenticate to the API
 $cashpoint->authenticate('api_key', 'api_secret');
 
-$response = $cashpoint->sale(array(
-    'first_name' => 'Jamie',
-    'last_name' => 'Rumbelow',
-    'amount' => 10000,
-    'currency' => 'GBP',
-    'credit_card' => array(
-        'type' => 'visa',
-        'number' => 0000000000000000,
-        'expiry' => '01/12',
-        'cvv' => 123
-    ),
-    'address' => array(
-        'street' => '1 Test Lane',
-        'city' => 'Testtown',
-        'region' => 'Testshire',
-        'country' => 'GB',
-        'postal_code' => 'TE1 1ST'
-    )
+// Create our credit card object
+$credit_card = new Cashpoint_Credit_Card(array(
+    'type'   => 'visa',
+    'number' => 4899035848652006,
+    'expiry' => '01/12',
+    'cvv'    => 123
 ));
 
-if ($response['success'])
+// ...and our address object
+$address = new Cashpoint_Address(array(
+    'street' => '1 Test Lane',
+    'city' => 'Testtown',
+    'region' => 'Testshire',
+    'country' => 'GB',
+    'postal_code' => 'TE1 1ST'
+));
+
+// ...and create our final transaction object with this data!
+$transaction = new Cashpoint_Transaction(array(
+    'first_name'    => 'Jamie',
+    'last_name'     => 'Rumbelow',
+    'amount'        => 1000,
+    'currency'      => 'GBP',
+    'credit_card'   => $credit_card,
+    'address'       => $address
+));
+
+// Execute the transaction, and create a new payment.
+try
 {
-    echo "Successfully processed payment! (Transaction: " . $response['transaction'] . ")";
+    $response = $cashpoint->sale($transaction);
+    echo "Successfully processed payment! (Transaction: " . $response->transaction() . ")";
 }
-else
+catch (Cashpoint_Exception $e)
 {
-    echo "There was a problem! " . $response['error'];
+    echo "There was a problem! " . $e->getMessage();
 }
