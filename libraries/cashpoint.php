@@ -10,6 +10,9 @@
  * @copyright Copyright (c) 2012, Cashpoint <https://getcashpoint.com>
  * @license MIT
  */
+
+// Run a few checks...
+require_once 'cashpoint/startup.php';
  
 // Request data
 require_once 'cashpoint/request_data.php';
@@ -42,7 +45,10 @@ class Cashpoint
      * This way we can significantly cut down on code.
      */
     protected $methods = array(
-        'sale' => array('POST', '/authenticate')
+        'sale' => array('POST', '/payments'),
+        'authorise' => array('POST', '/authorisations'),
+        'capture' => array('POST', '/captures'),
+        'payments' => array('GET', '/payments'),
     );
     
     /**
@@ -75,7 +81,7 @@ class Cashpoint
         }
         else
         {
-            return $response;
+            return new Cashpoint_Response($response, 'POST /authenticate');
         }
     }
     
@@ -85,6 +91,14 @@ class Cashpoint
     public function access_token()
     {
         return $this->access_token;
+    }
+    
+    /**
+     * Get an individual payment
+     */
+    public function payment($id)
+    {
+        return new Cashpoint_Response($this->_make_request('GET', 'payments/' . $id), 'GET /payments/' . $id);
     }
     
     /**
