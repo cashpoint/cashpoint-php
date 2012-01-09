@@ -17,7 +17,7 @@ require '../libraries/cashpoint.php';
 $cashpoint = new Cashpoint();
 
 // Authenticate to the API
-$cashpoint->authenticate('api_key', 'api_secret');
+$cashpoint->authenticate('310d0042', 'b85ec2cbe7165b8608562ba546a027aa6dae7b2e');
 
 // Create our credit card object
 $credit_card = new Cashpoint_Credit_Card(array(

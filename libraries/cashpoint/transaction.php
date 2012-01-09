@@ -11,4 +11,13 @@
  * @license MIT
  */
 
-class Cashpoint_Transaction extends Cashpoint_Request_Data { }
+class Cashpoint_Transaction extends Cashpoint_Request_Data {
+    
+    public function __construct($data)
+    {
+        parent::__construct($data);
+        
+        $this->ip_address = $_SERVER['REMOTE_ADDR'];
+    }
+    
+}

@@ -35,7 +35,7 @@ class Cashpoint_Response
     {
         $this->data = $data;
         $this->request = $request;
-        $this->success = $data['success'];
+        $this->success = $data->success;
         
         if (!$this->success())
         {
@@ -64,9 +64,9 @@ class Cashpoint_Response
      */
     public function __call($method, $params)
     {
-        if (isset($this->data[$method]))
+        if (isset($this->data->$method))
         {
-            return $method;
+            return $this->data->$method;
         }
     }
     
@@ -76,6 +76,6 @@ class Cashpoint_Response
     protected function _handle_error()
     {
         // @todo Use more specific exception classes... although this requires that the API has a rethink
-        throw new Cashpoint_Exception($this->data['error']);
+        throw new Cashpoint_Exception($this->data->error);
     }
 }

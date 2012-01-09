@@ -74,9 +74,9 @@ class Cashpoint
             'api_secret' => $api_secret
         ));
         
-        if ($response['success'])
+        if ($response->success)
         {
-            $this->access_token = $response['access_token'];
+            $this->access_token = $response->access_token;
             return $this->access_token;
         }
         else
@@ -130,14 +130,28 @@ class Cashpoint
         
         if ($authenticated)
         {
-            $params['access_token'] = $this->access_token();
+            if (isset($params[0]))
+            {
+                $params[0]->access_token = $this->access_token();
+            }
+            else
+            {
+                $params['access_token'] = $this->access_token();
+            }
         }
         
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($method));
         
-        $http_data = http_build_query($params[0]);
+        if (isset($params[0]))
+        {
+            $http_data = http_build_query($params[0]);
+        }
+        else
+        {
+            $http_data = http_build_query($params);
+        }
         
         if ($method == 'GET')
         {
