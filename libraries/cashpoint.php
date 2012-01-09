@@ -45,10 +45,10 @@ class Cashpoint
      * This way we can significantly cut down on code.
      */
     protected $methods = array(
-        'sale' => array('POST', '/payments'),
-        'authorise' => array('POST', '/authorisations'),
-        'capture' => array('POST', '/captures'),
-        'payments' => array('GET', '/payments'),
+        'sale' => array('POST', 'payments'),
+        'authorise' => array('POST', 'authorisations'),
+        'capture' => array('POST', 'captures'),
+        'payments' => array('GET', 'payments'),
     );
     
     /**
