@@ -62,7 +62,7 @@ class Cashpoint_Response
     /**
      * A simple getter for the response data
      */
-    public function __call($method)
+    public function __call($method, $params)
     {
         if (isset($this->data[$method]))
         {

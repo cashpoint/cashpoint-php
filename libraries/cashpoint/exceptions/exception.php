@@ -11,4 +11,4 @@
  * @license MIT
  */
 
-class Cashpoint_Exception { }
+class Cashpoint_Exception extends Exception { }

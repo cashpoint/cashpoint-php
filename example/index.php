@@ -11,6 +11,8 @@
  * @license MIT
  */
 
+require '../libraries/cashpoint.php';
+
 // Create the Cashpoint object
 $cashpoint = new Cashpoint();
 

@@ -11,6 +11,19 @@
  * @license MIT
  */
  
+// Request data
+require_once 'cashpoint/request_data.php';
+require_once 'cashpoint/address.php';
+require_once 'cashpoint/credit_card.php';
+require_once 'cashpoint/transaction.php';
+
+// Exceptions
+require_once 'cashpoint/exceptions/exception.php';
+require_once 'cashpoint/exceptions/invalid_credit_card_exception.php';
+
+// Response
+require_once 'cashpoint/response.php';
+ 
 class Cashpoint
 {
     /**
@@ -110,14 +123,16 @@ class Cashpoint
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($method));
         
+        $http_data = http_build_query($params[0]);
+        
         if ($method == 'GET')
         {
-            $url = $url . ($params ? '?' . http_build_query($params) : '');
+            $url = $url . ($params ? '?' . $http_data : '');
         }
         
         if (is_array($params))
         {
-        	curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
+        	curl_setopt($curl, CURLOPT_POSTFIELDS, $http_data);
         }
 
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -126,7 +141,7 @@ class Cashpoint
 
         if ($response === FALSE)
         {
-            throw new Exception(curl_error($curl));
+            throw new Cashpoint_Exception(curl_error($curl));
         }
 
         curl_close($curl);

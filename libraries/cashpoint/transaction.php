@@ -11,14 +11,4 @@
  * @license MIT
  */
 
-class Cashpoint_Transaction extends Cashpoint_Request_Data
-{
-    /**
-     * Transactions
-     */
-     
-     public function __construct()
-     {
-        
-     }
-}
+class Cashpoint_Transaction extends Cashpoint_Request_Data { }
